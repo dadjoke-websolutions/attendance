@@ -1,0 +1,12 @@
+# Fallback-Schutz, falls PHP auf dem Host nicht ausgeführt wird
+<FilesMatch "^(config\.php|config\.sample\.php|lib\.php|schema\.sql)$">
+  Require all denied
+</FilesMatch>
+
+# tools/ enthält nur CLI-Skripte
+RedirectMatch 403 ^.*/tools/.*$
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "same-origin"
+</IfModule>
