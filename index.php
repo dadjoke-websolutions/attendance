@@ -92,6 +92,7 @@ $h = static fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
           <option value="m">männlich</option>
           <option value="x">keine Angabe</option>
         </select></p>
+      <p class="f f-third"><label for="f_request">Trainingsanfrage</label><input id="f_request" name="request_date" type="date"></p>
       <p class="f f-third"><label for="f_mobile">Mobile</label><input id="f_mobile" name="mobile" type="tel" maxlength="40" autocomplete="off"></p>
       <p class="f"><label for="f_email">E-Mail</label><input id="f_email" name="email" type="email" maxlength="190" autocomplete="off"></p>
       <p class="f f-wide"><label for="f_notes">Notizen</label><textarea id="f_notes" name="notes" rows="3"></textarea></p>

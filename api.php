@@ -54,11 +54,13 @@ try {
                 out(['error' => 'Vorname fehlt.'], 422);
             }
             $year = (int) ($in['birth_year'] ?? 0);
+            $request = $str('request_date', 10);
             $row = [
                 'first_name' => $first,
                 'last_name'  => $str('last_name', 80),
-                'gender'     => in_array($in['gender'] ?? 'x', ['f', 'm', 'x'], true) ? $in['gender'] : 'x',
+                'gender'     => in_array($in['gender'] ?? '', ['f', 'm', 'x'], true) ? $in['gender'] : 'x',
                 'birth_year' => ($year >= 1900 && $year <= 2100) ? $year : null,
+                'request_date' => preg_match('/^\d{4}-\d{2}-\d{2}$/', $request) ? $request : null,
                 'mobile'     => $str('mobile', 40),
                 'email'      => $str('email'),
                 'notes'      => s_cut((string) ($in['notes'] ?? ''), 5000),
@@ -84,6 +86,7 @@ try {
                 'last_name'  => $row['last_name'],
                 'gender'     => $row['gender'],
                 'birth_year' => $row['birth_year'],
+                'request_date' => $row['request_date'],
                 'mobile'     => $row['mobile'],
                 'email'      => $row['email'],
                 'notes'      => $row['notes'],

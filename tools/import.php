@@ -5,7 +5,9 @@
  *   php tools/import.php teilnehmer.csv
  *
  * Erwartete Kopfzeile (Semikolon getrennt, Reihenfolge beliebig, Spalten optional):
- *   Vorname;Name;Geschlecht;Jahrgang;Mobile;Mail;Notizen;aktiv;whatsapp
+ *   Vorname;Name;Geschlecht;Jahrgang;Trainingsanfrage;Mobile;Mail;Notizen;aktiv;whatsapp
+ *
+ * Trainingsanfrage: Datum als JJJJ-MM-TT oder TT.MM.JJJJ, leer erlaubt.
  *
  * Geschlecht: w/f = weiblich, m = männlich, alles andere = keine Angabe.
  * aktiv/whatsapp: 1, ja, x, true → wahr; leer oder 0 → falsch.
@@ -43,9 +45,21 @@ $pick = static function (array $row, array $names) use ($map): string {
 };
 $truthy = static fn(string $v): int => in_array(s_lower($v), ['1', 'ja', 'j', 'x', 'true', 'wahr', 'y', 'yes'], true) ? 1 : 0;
 
+/** Datum aus der CSV nach JJJJ-MM-TT, sonst null. */
+$asDate = static function (string $v): ?string {
+    $v = trim($v);
+    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $v)) {
+        return $v;
+    }
+    if (preg_match('/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/', $v, $m)) {
+        return sprintf('%04d-%02d-%02d', (int) $m[3], (int) $m[2], (int) $m[1]);
+    }
+    return null;
+};
+
 $st = db()->prepare(
-    'INSERT INTO participants (first_name, last_name, gender, birth_year, mobile, email, notes, active, whatsapp)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    'INSERT INTO participants (first_name, last_name, gender, birth_year, request_date, mobile, email, notes, active, whatsapp)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
 );
 
 $n = 0;
@@ -64,6 +78,7 @@ while (($row = fgetcsv($fh, 0, ';')) !== false) {
         $last,
         in_array($g, ['w', 'f', 'weiblich', 'female'], true) ? 'f' : (in_array($g, ['m', 'männlich', 'male'], true) ? 'm' : 'x'),
         ($year >= 1900 && $year <= 2100) ? $year : null,
+        $asDate($pick($row, ['trainingsanfrage', 'anfrage', 'request_date'])),
         $pick($row, ['mobile', 'mobil', 'telefon', 'tel']),
         $pick($row, ['mail', 'e-mail', 'email']),
         $pick($row, ['notizen', 'notiz', 'notes', 'bemerkung']),

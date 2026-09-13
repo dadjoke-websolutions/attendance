@@ -79,8 +79,8 @@ function logged_in(): bool
 function bootstrap_data(): array
 {
     $participants = db()->query(
-        'SELECT id, first_name, last_name, gender, birth_year, mobile, email,
-                notes, active, whatsapp
+        'SELECT id, first_name, last_name, gender, birth_year, request_date,
+                mobile, email, notes, active, whatsapp
            FROM participants ORDER BY first_name, last_name'
     )->fetchAll();
 

@@ -16,7 +16,9 @@ Frontend ohne Reload, Änderungen gehen per `fetch` an `api.php`.
    mysql -u USER -p DBNAME < schema.sql
    ```
 
-   Alternativ `schema.sql` in phpMyAdmin importieren.
+   Alternativ `schema.sql` in phpMyAdmin importieren. Bestehende
+   Installationen aktualisiert man mit den Dateien in `migrations/`, der Reihe
+   nach eingespielt.
 3. `config.sample.php` nach `config.php` kopieren und ausfüllen.
 4. Passwortschutz aktivieren (empfohlen – die Liste enthält Kontaktdaten):
 
@@ -33,7 +35,9 @@ Frontend ohne Reload, Änderungen gehen per `fetch` an `api.php`.
 ## Bedienung
 
 **Teilnehmerinnen** werden über die Schaltfläche oben rechts erfasst: Vorname,
-Name, Geschlecht, Jahrgang, Mobile, E-Mail, Notizen, aktiv, WhatsApp. In der
+Name, Geschlecht, Jahrgang, Trainingsanfrage, Mobile, E-Mail, Notizen, aktiv,
+WhatsApp. «Trainingsanfrage» hält fest, wann die Anfrage eingegangen ist, und
+darf leer bleiben. In der
 Liste erscheinen Vorname, Name und Jahrgang; der Stift öffnet den Datensatz
 erneut.
 
@@ -69,7 +73,7 @@ php tools/import.php teilnehmer.csv
 Erwartete Kopfzeile (Reihenfolge beliebig, Spalten optional):
 
 ```
-Vorname;Name;Geschlecht;Jahrgang;Mobile;Mail;Notizen;aktiv;whatsapp
+Vorname;Name;Geschlecht;Jahrgang;Trainingsanfrage;Mobile;Mail;Notizen;aktiv;whatsapp
 ```
 
 Bestehende Anwesenheiten werden nicht importiert; die alten Trainings sind
@@ -79,7 +83,7 @@ erfahrungsgemäss schneller von Hand nachgetragen als abgebildet.
 
 | Tabelle | Inhalt |
 | --- | --- |
-| `participants` | Stammdaten, `active` und `whatsapp` als Flags |
+| `participants` | Stammdaten, `request_date` als Datum der Anfrage, `active` und `whatsapp` als Flags |
 | `trainings` | Datum plus optionale Bezeichnung, eindeutig kombiniert |
 | `attendance` | eine Zeile je bekanntem Status, `present` oder `absent` |
 
@@ -103,6 +107,7 @@ Session-Token im Header `X-Token`:
 
 ## Mögliche Erweiterungen
 
+- Sortierung nach Trainingsanfrage, um neue Anfragen zuoberst zu sehen
 - Filter «nur WhatsApp» und Sammelexport der Nummern für die Gruppenbildung
 - Jahrgang in die vCard aufnehmen (in vCard 3.0 nur als Notiz sauber möglich)
 - Anwesenheitsquote je Person über eine Saison

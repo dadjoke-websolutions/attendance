@@ -239,6 +239,7 @@
     $('#f_last').value     = p ? p.last_name : '';
     $('#f_year').value     = p && p.birth_year ? p.birth_year : '';
     $('#f_gender').value   = p ? p.gender : 'f';
+    $('#f_request').value  = p && p.request_date ? p.request_date : '';
     $('#f_mobile').value   = p ? p.mobile : '';
     $('#f_email').value    = p ? p.email : '';
     $('#f_notes').value    = p ? (p.notes || '') : '';
@@ -257,6 +258,7 @@
       last_name:  $('#f_last').value,
       birth_year: $('#f_year').value,
       gender:     $('#f_gender').value,
+      request_date: $('#f_request').value,
       mobile:     $('#f_mobile').value,
       email:      $('#f_email').value,
       notes:      $('#f_notes').value,

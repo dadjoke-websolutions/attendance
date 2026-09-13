@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS participants (
   last_name  VARCHAR(80)  NOT NULL DEFAULT '',
   gender     ENUM('f','m','x') NOT NULL DEFAULT 'x',
   birth_year SMALLINT UNSIGNED NULL,
+  request_date DATE       NULL COMMENT 'Datum der Trainingsanfrage',
   mobile     VARCHAR(40)  NOT NULL DEFAULT '',
   email      VARCHAR(190) NOT NULL DEFAULT '',
   notes      TEXT         NULL,
