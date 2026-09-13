@@ -138,6 +138,23 @@ try {
             if (!in_array($status, ['', 'present', 'absent'], true)) {
                 out(['error' => 'Unbekannter Status.'], 422);
             }
+            if ($status !== '') {
+                // Kein Status für Trainings vor der Trainingsanfrage
+                $chk = db()->prepare(
+                    'SELECT t.training_date, p.request_date
+                       FROM trainings t JOIN participants p ON p.id = ?
+                      WHERE t.id = ?'
+                );
+                $chk->execute([$pid, $tid]);
+                $ref = $chk->fetch();
+                if (!$ref) {
+                    out(['error' => 'Training oder Teilnehmerin existiert nicht mehr. Seite neu laden.'], 409);
+                }
+                if ($ref['request_date'] !== null && $ref['training_date'] < $ref['request_date']) {
+                    out(['error' => 'Dieses Training liegt vor der Trainingsanfrage. Seite neu laden.'], 409);
+                }
+            }
+
             try {
                 if ($status === '') {
                     $st = db()->prepare('DELETE FROM attendance WHERE training_id = ? AND participant_id = ?');
