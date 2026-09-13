@@ -30,6 +30,9 @@
 
   const key = (t, p) => t + ':' + p;
   const statusOf = (t, p) => S.att.get(key(t, p)) || '';
+
+  /** Punkt nur ab dem Datum der Trainingsanfrage; ohne Datum immer. */
+  const shows = (p, t) => !p.request_date || t.training_date >= p.request_date;
   const NEXT = { '': 'present', present: 'absent', absent: '' };
 
   /* ---------- Server ---------- */
@@ -79,9 +82,11 @@
     return list;
   }
 
-  function presentCount(tid) {
+  function presentCount(t) {
+    const tr = typeof t === 'object' ? t : S.trainings.find((x) => x.id === t);
+    if (!tr) return 0;
     let n = 0;
-    for (const p of S.people) if (statusOf(tid, p.id) === 'present') n++;
+    for (const p of S.people) if (shows(p, tr) && statusOf(tr.id, p.id) === 'present') n++;
     return n;
   }
 
@@ -131,7 +136,7 @@
         esc(fmtFull(t.training_date) + (t.label ? ' · ' + t.label : '')) + ' – erfassen">' +
         (showYear ? '<span class="m">' + year + '</span>' : '') +
         '<span class="d">' + fmtDay(t.training_date) + '</span>' +
-        '<span class="n">' + presentCount(t.id) + '</span>' +
+        '<span class="n">' + presentCount(t) + '</span>' +
         (t.label ? '<span class="lbl">' + esc(t.label) + '</span>' : '') +
         '</button></th>');
     }
@@ -153,6 +158,10 @@
         '<a class="icon" href="vcf.php?id=' + p.id + '" title="Kontakt als .vcf">&#8623;</a>' +
         '</td>');
       for (const t of S.trainings) {
+        if (!shows(p, t)) {
+          h.push('<td class="dot-cell c-train pre" title="vor der Trainingsanfrage"></td>');
+          continue;
+        }
         const st = statusOf(t.id, p.id);
         h.push('<td class="dot-cell c-train"><button type="button" class="dot" data-s="' + st +
           '" data-t="' + t.id + '" data-p="' + p.id + '" aria-label="' +
@@ -171,7 +180,7 @@
   function renderSession() {
     const t = S.trainings.find((x) => x.id === S.sessionId);
     if (!t) { S.view = 'grid'; renderGrid(); return; }
-    const people = visible();
+    const people = visible().filter((p) => shows(p, t));
 
     const h = [];
     h.push('<div class="session"><div class="session-head">');

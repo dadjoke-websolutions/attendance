@@ -228,6 +228,8 @@ tr.is-inactive td.c-first, tr.is-inactive td.c-last, tr.is-inactive td.c-year { 
 
 /* Punkt */
 .dot-cell { text-align: center; padding: 0; }
+/* Training liegt vor der Trainingsanfrage – kein Status möglich */
+.dot-cell.pre, .grid tbody tr:hover td.pre { background: #f3f0f5; }
 .dot {
   display: inline-flex;
   align-items: center;

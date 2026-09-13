@@ -51,7 +51,10 @@ Tabelle. Datum und optional eine Bezeichnung, damit zwei Trainings am selben
 Tag unterscheidbar bleiben.
 
 **Anwesenheit**: Ein Klick auf den Punkt wechselt hellgrau (unbekannt) → grün
-(anwesend) → rot (abwesend) → hellgrau. Die Zahl der Anwesenden steht im
+(anwesend) → rot (abwesend) → hellgrau. Punkte erscheinen erst ab dem Datum
+der Trainingsanfrage; frühere Trainings bleiben als leere, grau hinterlegte
+Zelle stehen und zählen nicht mit. Ohne Anfragedatum sind alle Trainings
+bespielbar. Die Zahl der Anwesenden steht im
 Spaltentitel. Ein Klick auf den Spaltentitel öffnet die Erfassungsansicht: ein
 Training, eine Liste mit grossen Tap-Flächen für das Handy in der Halle. Ein
 neu angelegtes Training öffnet diese Ansicht direkt; `Esc` oder «← Liste»
